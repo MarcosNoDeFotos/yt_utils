@@ -8,6 +8,8 @@ from soundsRecognition import *
 import importlib.machinery
 import importlib.util
 import os
+from time import sleep
+from _thread import start_new_thread
 
 class VoskVoiceRecognitionToText(multiprocessing.Process):
     
@@ -70,6 +72,7 @@ class VoskVoiceRecognitionPlaySound(multiprocessing.Process):
 
     soundsPlayerModules = []
     soundsModulesPath = currentPath+"soundsRecognition/"
+    playing = False
     def __init__(self,):
         multiprocessing.Process.__init__(self)
         self.exit = multiprocessing.Event()
@@ -88,27 +91,51 @@ class VoskVoiceRecognitionPlaySound(multiprocessing.Process):
         stream = mic.open(format=pyaudio.paInt16, channels=1, rate=128000, input=True, frames_per_buffer=4096,)
         stream.start_stream()
         lastText = None
+        lastTextPlayed = ''
         try:
             while not self.exit.is_set():
                 try:
                     try:
                         data = stream.read(4096)
+                        textDetected = None
                         if not recognizer.AcceptWaveform(data):
                             text = json.loads(recognizer.PartialResult())
+                            text = str(text["partial"]).strip()
+                            # print(f"{lastText}                     {text}")
+                            if not lastTextPlayed.__contains__(text):
+                                textDetected = lastText
+                            lastText = text
+                        else:
+                            text = json.loads(recognizer.Result())
+                        #     text = str(text["text"]).strip()
+                        #     if text and text != '' and text != lastText:
+                        #         lastText = text
+                        #         textDetected = text
+                        if  textDetected and textDetected != '' and not self.playing and not lastTextPlayed.__contains__(textDetected):
                             
-                            if text["partial"] != None:
-                                textClean = str(text["partial"]).strip()
-                                if (textClean != '' and textClean != lastText) or not lastText:
-                                    lastText = textClean
-                                    # for module in self.soundsPlayerModules:
-                                    #     module.playSound(clearText(textClean))
-                                print(textClean)
-                        
+                            print(textDetected)
+                            for module in self.soundsPlayerModules:
+                                # print(module.playing)
+                                if module.canPlay(clearText(textDetected)):
+                                    recognizer.Result()
+                                    recognizer.Reset()
+                                    self.playing = True
+                                    lastTextPlayed = textDetected
+                                    start_new_thread(self.th_resetPlaying,())
+                                    module.playSound(clearText(textDetected))
+                                else:
+                                    lastTextPlayed = ''
+                                
+                            textDetected = None
+
                     except Exception as e1:
                         print(e1)
                 except Exception as e2:
                     print(e2)
         except Exception as e:
-            print(e)    
+            print(e)
+    def th_resetPlaying(self):
+        sleep(2)
+        self.playing = False
     def terminate(self):
         self.exit.set()
