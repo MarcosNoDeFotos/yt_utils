@@ -97,6 +97,32 @@
             </child>
           </object>
         </child>
+        <child>
+          <object class="ttk.Notebook.Tab" id="tab_video" named="True">
+            <property name="text" translatable="yes">Vídeo	</property>
+            <child>
+              <object class="ttk.Frame" id="frame1">
+                <property name="height">200</property>
+                <property name="width">200</property>
+                <layout manager="pack">
+                  <property name="side">top</property>
+                </layout>
+                <child>
+                  <object class="ttk.Button" id="btnExtraerPistasAudio" named="True">
+                    <property name="command" type="command" cbtype="with_wid">_extraerPistasAudio</property>
+                    <property name="compound">top</property>
+                    <property name="text" translatable="yes">Extraer pistas de audio de un mp4</property>
+                    <layout manager="pack">
+                      <property name="ipadx">5</property>
+                      <property name="pady">30</property>
+                      <property name="side">top</property>
+                    </layout>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
       </object>
     </child>
   </object>

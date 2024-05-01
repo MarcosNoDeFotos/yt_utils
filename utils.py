@@ -50,6 +50,3 @@ def downloadFFMPEG():
                 print("FFMPEG Descargado correctamente")
         except Exception as e:
             print(e)
-
-if __name__ == '__main__':
-    Process(target=downloadFFMPEG).start()

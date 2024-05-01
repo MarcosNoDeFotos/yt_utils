@@ -7,8 +7,9 @@ import threading as th
 from vosk_realtime import VoskVoiceRecognitionToText, VoskVoiceRecognitionPlaySound
 from traductor import traducirImagenPortaPapeles
 from MessageBox.Messages import MessageInfo
-
-
+from audio_utils import extraerPistasMP4
+from multiprocessing import Process
+import utils
 PROJECT_PATH = pathlib.Path(__file__).parent
 PROJECT_UI = PROJECT_PATH / "yt_utils_gui.ui"
 RESOURCE_PATHS = [PROJECT_PATH]
@@ -61,7 +62,7 @@ class YT_UtilsUI:
             self.recording = False
 
     def _traducirPantalla(self, widget_id:str):
-        messageRoot, txtEditor = MessageInfo("Resultado Traducción", "Traduciendo...")
+        _, txtEditor = MessageInfo("Resultado Traducción", "Traduciendo...")
         th.Thread(target=self._resultadoTraduccion, args=(txtEditor,)).start()
     def _resultadoTraduccion(self, txtEditor:tk.Text):
         try:
@@ -70,6 +71,10 @@ class YT_UtilsUI:
             txtEditor.insert(tk.END, textoObtenido)       
         except:
             None
+    def _extraerPistasAudio(self, widget_id):
+        _, txtEditor = MessageInfo("Resultado Traducción", "")
+        th.Thread(target=extraerPistasMP4, args=(txtEditor,)).start()
 if __name__ == "__main__":
+    utils.downloadFFMPEG()
     app = YT_UtilsUI()
     app.run()
