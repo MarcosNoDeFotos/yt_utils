@@ -33,39 +33,73 @@ times_2 = np.linspace(0, n_samples_2/sample_freq_2, num=n_samples_2)
 t_audio_2 = n_samples_2/sample_freq_2
 
 
-treshold = 500
+treshold = 900
 reduccion_a = 400
 l_channel = list(l_channel)
 l_channel_2_original = list(l_channel_2)
 l_channel_2 = list(l_channel_2)
 
+treshold_finder = []
+for i in range(0, l_channel.__len__()):
+    if i%2==0:
+        treshold_finder.append(treshold)
+    else:
+        treshold_finder.append(-treshold)
 
 
-print(l_channel.__len__())
-print(l_channel_2.__len__())
-for i in tqdm(range(0, l_channel.__len__(), 10)):
-    hablando = False
-    if i+6<l_channel.__len__():
-        for j in range(i, i+10):
-            frame = l_channel[j]
-            if (frame<0 and frame<-treshold) or frame>0 and frame>treshold:
-                hablando = True
-                break
-    if hablando:
-        for j in range(i, i+10):
-            if (l_channel_2[j] < 0 and l_channel_2[j] < -treshold) or (l_channel_2[j] > 0 and l_channel_2[j] > treshold):
-                l_channel_2[j]*=0.4
-print("Despues")          
-print(l_channel.__len__())
-print(l_channel_2.__len__())
+
+# Modo 1
+# lastCorte = -1
+# for i in tqdm(range(0, l_channel.__len__(), 10)):
+#     hablando = False
+#     if i+10<l_channel.__len__():
+#         for j in range(i, i+10):
+#             frame = l_channel[j]
+#             if (frame<0 and frame<-treshold) or (frame>0 and frame>treshold):
+#                 hablando = True
+#                 break
+#     if hablando:
+#         # tiempo = i/sample_freq_2
+
+
+#         # if lastCorte != -1:
+#         #     print(f"Corte en {lastCorte} - {tiempo}s")
+#         # lastCorte = tiempo
+        
+#         for j in range(i, i+10):
+#             if (l_channel_2[j] < 0 and l_channel_2[j] < -treshold) or (l_channel_2[j] > 0 and l_channel_2[j] > treshold):
+#                 l_channel_2[j]*=0.2
+
+
+
+#Mejorar
+lastFrameSinHablar = -1
+hablando = False
+frameEmpiezaAHablar = -1
+framesToLower = []
+for index, frame in enumerate(tqdm(l_channel)):
+    if  (frame<0 and frame<-treshold) or (frame>0 and frame>treshold): # El sonido supera el umbral de mínimo
+        if frameEmpiezaAHablar+100<index:
+            if not hablando:
+                frameEmpiezaAHablar = index
+            hablando = True
+    else:
+        lastFrameSinHablar = index
+        if hablando and frameEmpiezaAHablar+20<index:
+            framesToLower.append([frameEmpiezaAHablar, index])
+            hablando = False
+print(framesToLower.__len__())
+   
+
+for inicio, fin in framesToLower:
+    for i in range(inicio, fin):
+        l_channel_2[i] = 400
+
+
 
 plt.figure(1)
-plt.subplot(211)
 plt.plot(times, l_channel)
 plt.plot(times_2, l_channel_2, color=(1.0, 0.0, 0.0, 0.3))
-plt.xlim(0, t_audio)
-plt.subplot(212)
-plt.plot(times, l_channel)
-plt.plot(times_2, l_channel_2_original, color=(1.0, 0.0, 0.0, 0.3))
+plt.plot(times_2, l_channel_2_original, color=(0.0, 1.0, 0.0, 0.3))
 plt.xlim(0, t_audio)
 plt.show()
