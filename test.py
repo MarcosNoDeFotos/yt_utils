@@ -3,13 +3,12 @@ import utils
 import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
-from pydub import AudioSegment
 
 #Pintamos la onda de volumen de un wav
 
 
-wav_obj = wave.open(utils.currentPath+'audio_out/30-04-2024-011452/micro.wav', 'rb')
-wav_obj2 = wave.open(utils.currentPath+'audio_out/30-04-2024-011452/escritorio2.wav', 'rb')
+wav_obj = wave.open(utils.currentPath+'audio_out/30-04-2024-104350/micro.wav', 'rb')
+wav_obj2 = wave.open(utils.currentPath+'audio_out/30-04-2024-104350/escritorio2.wav', 'rb')
 
 
 n_samples = 300000#wav_obj.getnframes()
@@ -71,24 +70,36 @@ for i in range(0, l_channel.__len__()):
 #                 l_channel_2[j]*=0.2
 
 
-
-#Mejorar
-lastFrameSinHablar = -1
-hablando = False
-frameEmpiezaAHablar = -1
 framesToLower = []
+#Mejorar
+# lastFrameSinHablar = -1
+# hablando = False
+# frameEmpiezaAHablar = -1
+
+# for index, frame in enumerate(tqdm(l_channel)):
+#     if  (frame<0 and frame<-treshold) or (frame>0 and frame>treshold): # El sonido supera el umbral de mínimo
+#         if frameEmpiezaAHablar+100<index:
+#             if not hablando:
+#                 frameEmpiezaAHablar = index
+#             hablando = True
+#     else:
+#         lastFrameSinHablar = index
+#         if hablando and frameEmpiezaAHablar+20<index:
+#             framesToLower.append([frameEmpiezaAHablar, index])
+#             hablando = False
+
+indexComienzaAHablar = -1
+hablando = False
 for index, frame in enumerate(tqdm(l_channel)):
-    if  (frame<0 and frame<-treshold) or (frame>0 and frame>treshold): # El sonido supera el umbral de mínimo
-        if frameEmpiezaAHablar+100<index:
-            if not hablando:
-                frameEmpiezaAHablar = index
+    if (frame <0 and frame <= -treshold) or (frame >0 and frame >= treshold): # Si supera el mínimo del umbral
+        
+        if not hablando:
             hablando = True
-    else:
-        lastFrameSinHablar = index
-        if hablando and frameEmpiezaAHablar+20<index:
-            framesToLower.append([frameEmpiezaAHablar, index])
-            hablando = False
-print(framesToLower.__len__())
+            for i in range(index, index+5):
+                if i%2==0:
+                    treshold_finder[index] = 20000
+                else:
+                    treshold_finder[index+1] = -20000
    
 
 for inicio, fin in framesToLower:
@@ -99,7 +110,8 @@ for inicio, fin in framesToLower:
 
 plt.figure(1)
 plt.plot(times, l_channel)
+plt.plot(times_2, l_channel_2_original, color=(0.0, 0.0, 0.0, 0.3))
 plt.plot(times_2, l_channel_2, color=(1.0, 0.0, 0.0, 0.3))
-plt.plot(times_2, l_channel_2_original, color=(0.0, 1.0, 0.0, 0.3))
+plt.plot(times_2, treshold_finder, color=(.0, 0.0, 1.0, 0.3))
 plt.xlim(0, t_audio)
 plt.show()
