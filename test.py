@@ -4,14 +4,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
+amplitudOnda = 500
+
+
+
 #Pintamos la onda de volumen de un wav
 
 
-wav_obj = wave.open(utils.currentPath+'audio_out/30-04-2024-104350/micro.wav', 'rb')
-wav_obj2 = wave.open(utils.currentPath+'audio_out/30-04-2024-104350/escritorio2.wav', 'rb')
+wav_obj = wave.open(utils.currentPath+'audio_out/30-04-2024-011452/micro.wav', 'rb')
+wav_obj2 = wave.open(utils.currentPath+'audio_out/30-04-2024-011452/escritorio2.wav', 'rb')
 
 
-n_samples = 300000#wav_obj.getnframes()
+n_samples = 30000#wav_obj.getnframes()
 sample_freq = wav_obj.getframerate()
 signal_wave = wav_obj.readframes(n_samples)
 
@@ -88,23 +92,67 @@ framesToLower = []
 #             framesToLower.append([frameEmpiezaAHablar, index])
 #             hablando = False
 
+# indexComienzaAHablar = -1
+# hablando = False
+# for index, frame in enumerate(tqdm(l_channel)):
+#     if (frame <0 and frame <= -treshold) or (frame >0 and frame >= treshold): # Si supera el mínimo del umbral
+        
+#         if not hablando:
+#             hablando = True
+#             indexComienzaAHablar = index
+#             for i in range(index, index+10):
+#                 if i%2==0:
+#                     treshold_finder[i] = 30000
+#                 else:
+#                     treshold_finder[i] = -30000
+#     else:
+#         if hablando and indexComienzaAHablar+5000 <=index:
+#             if index+10 <= l_channel.__len__():
+#                 for i in range(index, index+10):
+#                     if i%2==0:
+#                         treshold_finder[i] = 30000
+#                     else:
+#                         treshold_finder[i] = -30000
+#             hablando = False
+
+
 indexComienzaAHablar = -1
 hablando = False
 for index, frame in enumerate(tqdm(l_channel)):
-    if (frame <0 and frame <= -treshold) or (frame >0 and frame >= treshold): # Si supera el mínimo del umbral
-        
+    max = index+amplitudOnda
+    if max > l_channel.__len__():
+        max = l_channel.__len__()
+    fueraDeUmbral = False
+    for indexFinder, frameFinder in enumerate(l_channel[index:max]):
+        if (frameFinder <0 and frameFinder <= -treshold) or (frameFinder >0 and frameFinder >= treshold): # Si supera el mínimo del umbral
+            fueraDeUmbral = True
+    if fueraDeUmbral:
         if not hablando:
             hablando = True
-            for i in range(index, index+5):
+            indexComienzaAHablar = index
+            for i in range(index, index+10):
                 if i%2==0:
-                    treshold_finder[index] = 20000
+                    treshold_finder[i] = 30000
                 else:
-                    treshold_finder[index+1] = -20000
-   
+                    treshold_finder[i] = -30000
+    else:
+        if hablando and indexComienzaAHablar+5000 <=index:
+            if index+10 <= l_channel.__len__():
+                for i in range(index, index+10):
+                    if i%2==0:
+                        treshold_finder[i] = 30000
+                    else:
+                        treshold_finder[i] = -30000
+            hablando = False
 
-for inicio, fin in framesToLower:
-    for i in range(inicio, fin):
-        l_channel_2[i] = 400
+     
+
+
+
+
+# for inicio, fin in framesToLower:
+#     for i in range(inicio, fin):
+#         l_channel_2[i] = 400
 
 
 
@@ -112,6 +160,6 @@ plt.figure(1)
 plt.plot(times, l_channel)
 plt.plot(times_2, l_channel_2_original, color=(0.0, 0.0, 0.0, 0.3))
 plt.plot(times_2, l_channel_2, color=(1.0, 0.0, 0.0, 0.3))
-plt.plot(times_2, treshold_finder, color=(.0, 0.0, 1.0, 0.3))
+plt.plot(times_2, treshold_finder, color=(.0, 0.0, 1.0, 1))
 plt.xlim(0, t_audio)
 plt.show()
