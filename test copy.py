@@ -3,7 +3,7 @@ import utils
 import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
-
+from pydub import AudioSegment
 amplitudOnda = 500
 
 
@@ -42,6 +42,21 @@ l_channel = list(l_channel)
 l_channel_2_original = list(l_channel_2)
 l_channel_2 = list(l_channel_2)
 
+
+
+
+
+treshold_finder = []
+for i in range(0, l_channel.__len__()):
+    if i%2==0:
+        treshold_finder.append(treshold)
+    else:
+        treshold_finder.append(-treshold)
+
+
+
+
+
 new_channel_l = [];
 scalex = []
 ascending = l_channel[1] > l_channel[0]
@@ -59,11 +74,52 @@ for index, frame in enumerate(tqdm(l_channel)):
             new_channel_l.append(0)
     else:
         new_channel_l.append(0)
+
+
+
+indexComienzaAHablar = -1
+hablando = False
+cortes = [0]
+for index, frame in enumerate(tqdm(l_channel)):
+    if (frame <0 and frame <= -treshold) or (frame >0 and frame >= treshold): # Si supera el mínimo del umbral
+        
+        if not hablando:
+            hablando = True
+            indexComienzaAHablar = index
+            for i in range(index, index+10):
+                if i%2==0:
+                    treshold_finder[i] = 30000
+                else:
+                    treshold_finder[i] = -30000
+    else:
+        if hablando and indexComienzaAHablar+5000 <=index:
+            if index+10 <= l_channel.__len__():
+                cortes.append(index/sample_freq_2)
+                for i in range(index, index+10):
+                    if i%2==0:
+                        treshold_finder[i] = 30000
+                    else:
+                        treshold_finder[i] = -30000
+            hablando = False
+cortes.append(t_audio)
+
+print(cortes)
+print(cortes.__len__())
+originalAudio = AudioSegment.from_wav(utils.currentPath+'audio_out/30-04-2024-011452/micro.wav')
+for i, corte in enumerate(cortes):
+    if i+1<cortes.__len__():
+        corteFrom = corte*1000
+        corteTo = cortes[i+1]*1000
+        newAudio = originalAudio[corteFrom:corteTo]
+        newAudio.export(utils.currentPath+f'audio_out/30-04-2024-011452/SPLIT{i+1}.wav', format="wav") #Exports to a wav file in the current path
+        print(f"{corte} - {cortes[i+1]}")
+
 plt.figure(1)
 plt.subplot(211)
 plt.plot(times, l_channel)
 plt.xlim(0, t_audio)
 plt.subplot(212)
 plt.plot(times, new_channel_l)
+plt.plot(times_2, treshold_finder, color=(.0, 0.0, 1.0, .8))
 plt.xlim(0, t_audio)
 plt.show()
