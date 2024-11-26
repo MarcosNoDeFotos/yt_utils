@@ -2,3 +2,9 @@ opencv-python
 easyocr
 tk
 vosk
+pycaw
+flask
+pywin32
+comtypes
+pygame
+sounddevice

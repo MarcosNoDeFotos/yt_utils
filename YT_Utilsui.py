@@ -10,6 +10,9 @@ from MessageBox.Messages import MessageInfo
 from audio_utils import extraerPistasMP4
 from multiprocessing import Process
 import utils
+from mixer.app import runApp as runMixerApp
+
+
 PROJECT_PATH = pathlib.Path(__file__).parent
 PROJECT_UI = PROJECT_PATH / "yt_utils_gui.ui"
 RESOURCE_PATHS = [PROJECT_PATH]
@@ -74,7 +77,11 @@ class YT_UtilsUI:
     def _extraerPistasAudio(self, widget_id):
         _, txtEditor = MessageInfo("Resultado Traducción", "")
         th.Thread(target=extraerPistasMP4, args=(txtEditor,)).start()
+
+
 if __name__ == "__main__":
     utils.downloadFFMPEG()
     app = YT_UtilsUI()
+    th.Thread(target=runMixerApp).start()
     app.run()
+    exit()
