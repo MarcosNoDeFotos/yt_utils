@@ -1,1 +1,3 @@
 import mixer.audioController
+import dbcon
+import modelo.config_sonidos

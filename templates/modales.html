@@ -1,0 +1,115 @@
+<div id="modalTraduccion" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Resultado de la traducción</h5>
+            </div>
+            <div class="modal-body">
+                <div class="input-group mb-3">
+                    <div class="input-group-append">
+                        <label class="input-group-text" for="idiomaOrigen">Idioma Origen</label>
+                    </div>
+                    <select class="custom-select" id="idiomaOrigen">
+                        <option selected value="en">Inglés</option>
+                        <option value="es">Español</option>
+                        <option value="ca">Catalán</option>
+                        <option value="de">Alemán</option>
+                        <option value="fr">Francés</option>
+                        <option value="ja">Japonés</option>
+                        <option value="ru">Ruso</option>
+                        <option value="zh">Chino</option>
+                        <option value="ar">Árabe</option>
+                    </select>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-append">
+                        <label class="input-group-text" for="idiomaDestino">Idioma Destino</label>
+                    </div>
+                    <select class="custom-select" id="idiomaDestino">
+                        <option value="en">Inglés</option>
+                        <option selected value="es">Español</option>
+                        <option value="ca">Catalán</option>
+                        <option value="de">Alemán</option>
+                        <option value="fr">Francés</option>
+                        <option value="ja">Japonés</option>
+                        <option value="ru">Ruso</option>
+                        <option value="zh">Chino</option>
+                        <option value="ar">Árabe</option>
+                    </select>
+                </div>
+                <textarea class="ta-resultado" id="resultadoTraducción" rows="10" disabled></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="pegarCapturaYTraducir">Traducir</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalReconocerTexto" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Resultado del reconocimiento de texto</h5>
+            </div>
+            <div class="modal-body">
+                <div class="input-group mb-3">
+                    <div class="input-group-append">
+                        <label class="input-group-text" for="idiomaOrigenReconocimientoTexto">Idioma Origen</label>
+                    </div>
+                    <select class="custom-select" id="idiomaOrigenReconocimientoTexto">
+                        <option selected value="en">Inglés</option>
+                        <option value="es">Español</option>
+                        <option value="ca">Catalán</option>
+                        <option value="de">Alemán</option>
+                        <option value="fr">Francés</option>
+                        <option value="ja">Japonés</option>
+                        <option value="ru">Ruso</option>
+                        <option value="zh">Chino</option>
+                        <option value="ar">Árabe</option>
+                    </select>
+                </div>
+                <textarea class="ta-resultado" id="resultadoReconocimientoTexto" rows="10" disabled></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="pegarCapturaYReconocerTexto">Obtener texto</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalConfiguracionPanelSonidos" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Configuración</h5>
+            </div>
+            <div class="modal-body">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr>
+                            <th scope="col">Identificador</th>
+                            <th scope="col">Ruta</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="contenidoConfigSonidos">
+                        <tr data-id="">
+                            <td><input type="text" class="form-control conf-son-id" data-id=""></td>
+                            <td><input type="text" class="form-control conf-son-ruta" data-id=""></td>
+                            <td class="acciones-lista">
+                                <a href="#" onclick="guardarConfSonido()"><i class="fa fa-floppy-o" aria-hidden="true"></i></a>
+                                <a href="#" onclick="eliminarConfSonido()"><i class="fa fa-trash-o btn-trash" aria-hidden="true"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -8,3 +8,7 @@ pywin32
 comtypes
 pygame
 sounddevice
+pygubu
+matplotlib
+pyaudio
+deep_translator
