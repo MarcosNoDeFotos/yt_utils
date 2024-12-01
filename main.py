@@ -50,6 +50,34 @@ def getConfiguracionesSonidos():
 
 
 
+@app.route("/guardarConfiguracionSonido",  methods = ['POST'])
+def guardarConfiguracionSonido():
+    status = "ok"
+    response = ""
+    id = request.form.get("id")
+    identificador = request.form.get("identificador")
+    ruta = request.form.get("ruta")
+    ruta = ruta.replace("\\", "/")
+    if id == "creando":
+        nuevoId = config_sonidos.nuevaConfiguracionSonido(identificador, ruta)
+        response = json.dumps({'status': status, 'id': nuevoId})
+    else:
+        if not config_sonidos.actualizarConfiguracionSonido(id, identificador, ruta):
+            status = "failed"
+        response = json.dumps({'status': status})
+    return response
+
+
+@app.route("/eliminarConfiguracionSonido",  methods = ['POST'])
+def eliminarConfiguracionSonido():
+    status = "ok"
+    id = request.form.get("id")
+    if not config_sonidos.eliminarConfiguracionSonido(id):
+        status = "failed"
+    return json.dumps({'status': status})
+
+
+
 
 
 

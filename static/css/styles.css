@@ -29,3 +29,7 @@
     flex-direction: row;
     flex-wrap: nowrap;
 }
+
+.tick{
+    color: green;
+}

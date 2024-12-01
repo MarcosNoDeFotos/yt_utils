@@ -96,16 +96,11 @@
                         </tr>
                     </thead>
                     <tbody id="contenidoConfigSonidos">
-                        <tr data-id="">
-                            <td><input type="text" class="form-control conf-son-id" data-id=""></td>
-                            <td><input type="text" class="form-control conf-son-ruta" data-id=""></td>
-                            <td class="acciones-lista">
-                                <a href="#" onclick="guardarConfSonido()"><i class="fa fa-floppy-o" aria-hidden="true"></i></a>
-                                <a href="#" onclick="eliminarConfSonido()"><i class="fa fa-trash-o btn-trash" aria-hidden="true"></i></a>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
+                <div class="row justify-content-end mr-4">
+                    <a href="#" class="btn btn-primary" id="nuevoConfSonido" onclick="nuevoConfSonido()">Nuevo</a>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>

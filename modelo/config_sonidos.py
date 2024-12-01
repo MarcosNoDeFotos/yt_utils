@@ -22,11 +22,12 @@ def getConfiguracionesSonidos():
 def nuevaConfiguracionSonido(identificador, rutaFichero):
     db = dbcon.getDB()
     cursor = db.cursor()
-    result = cursor.execute(f"insert into {tabla}(identificador, rutaFichero) values(?,?)", (identificador, rutaFichero))
+    nuevoID = dbcon.getSequence(tabla)
+    result = cursor.execute(f"insert into {tabla}(id, identificador, rutaFichero) values(?,?,?)", (nuevoID,identificador, rutaFichero))
     db.commit()
     cursor.close()
     db.close()
-    return result.rowcount == 1
+    return nuevoID
 
 def eliminarConfiguracionSonido(id):
     db = dbcon.getDB()
