@@ -1,4 +1,5 @@
 import dbcon
+import global_vars
 
 tabla = "config_sonidos"
 
@@ -27,6 +28,7 @@ def nuevaConfiguracionSonido(identificador, rutaFichero):
     db.commit()
     cursor.close()
     db.close()
+    cargarSonidosEnMemoria()
     return nuevoID
 
 def eliminarConfiguracionSonido(id):
@@ -36,6 +38,7 @@ def eliminarConfiguracionSonido(id):
     db.commit()
     cursor.close()
     db.close()
+    cargarSonidosEnMemoria()
     return result.rowcount == 1
 
 def actualizarConfiguracionSonido(id, identificador, rutaFichero):
@@ -45,4 +48,15 @@ def actualizarConfiguracionSonido(id, identificador, rutaFichero):
     db.commit()
     cursor.close()
     db.close()
+    cargarSonidosEnMemoria()
     return result.rowcount == 1
+
+
+
+def cargarSonidosEnMemoria():
+    global_vars.sonidos = {}
+    for conf in getConfiguracionesSonidos():
+        global_vars.sonidos[conf.identificador] = conf.rutaFichero
+
+
+cargarSonidosEnMemoria()

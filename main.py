@@ -3,6 +3,12 @@ import global_vars
 import json
 from reconocimientoTexto import traducirImagenPortaPapeles, convertirATextoImagenDePortapapeles
 from modelo import config_sonidos
+from modelo import configuracion
+import sounddevice
+from pygame import mixer, time 
+
+
+
 app = Flask("app")
 
 
@@ -76,6 +82,48 @@ def eliminarConfiguracionSonido():
         status = "failed"
     return json.dumps({'status': status})
 
+
+
+
+
+
+#REST
+@app.route("/getDispositivosAudio")
+def getDispositivosAudio():
+    devs = sounddevice.query_devices()
+    devs2 = []
+    for dev in devs:
+        if dev['max_input_channels'] == 0 and dev["name"] not in devs2:
+            devs2.append(dev['name'])
+    devs2.sort()
+
+    dispositivoSeleccionado = configuracion.getConfiguracion().salida_audio
+
+    return json.dumps({'code': 200, 'dispositivos': devs2, 'seleccionado': dispositivoSeleccionado})
+
+
+@app.route("/setSalidaAudio", methods = ["POST"])
+def setSalidaAudio():
+    dispositivoSeleccionado = request.form.get("dispositivoSeleccionado")
+    actualizado = configuracion.actualizarConfiguracionSonido(dispositivoSeleccionado)
+    if actualizado:
+        print(f"Se establece la salida a {dispositivoSeleccionado}")
+    return json.dumps({'code': 200, 'status': actualizado})
+
+
+
+@app.route("/reproducirSonido")
+def reproducirSonido():
+    identificador = request.args.get("identificador")   
+    try:
+        print(f"Reproduciendo {global_vars.sonidos[identificador]}")
+        mixer.music.load(global_vars.sonidos[identificador])
+        mixer.music.play() #Play it
+        while mixer.music.get_busy(): 
+            time.Clock().tick(10)
+    except Exception as e:
+        print(e)
+    return json.dumps({'code': 200})
 
 
 

@@ -21,6 +21,8 @@ function pegarCapturaYTraducir() {
         }
     });
 }
+
+
 function pegarCapturaYReconocerTexto() {
     $("#resultadoReconocimientoTexto").val("Obteniendo texto...");
     var idiomaOrigen = $("#idiomaOrigenReconocimientoTexto").val();
@@ -57,6 +59,44 @@ function abrirConfiguracionesSonidos() {
                 document.querySelector("#contenidoConfigSonidos").appendChild(tr)
             });
 
+        }
+    });
+    $("#salidaAudio").text("");
+    $.ajax({
+        type: "GET",
+        url: "/getDispositivosAudio",
+        success: function (response) {
+            var response = JSON.parse(response)
+            response.dispositivos.forEach(dev => {
+                var option = document.createElement("option")
+                option.setAttribute("value", dev)
+                if (dev == response.seleccionado) {
+                    option.setAttribute("selected", "")
+                }
+                option.innerHTML = dev
+                
+                document.querySelector("#salidaAudio").appendChild(option)
+            });
+
+        }
+    });
+
+
+}
+
+
+function guardarSalidaAudio(src) {
+    var formData = new FormData()
+    formData.append("dispositivoSeleccionado", src.value)
+
+    $.ajax({
+        type: "POST",
+        url: "/setSalidaAudio",
+        data: formData,
+        crossDomain: 'true',
+        contentType: false,
+        processData: false,
+        success: function (response) {
         }
     });
 }
