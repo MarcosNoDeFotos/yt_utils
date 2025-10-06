@@ -12,3 +12,4 @@ pygubu
 matplotlib
 pyaudio
 deep_translator
+keyboard

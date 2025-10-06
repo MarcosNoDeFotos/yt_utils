@@ -16,7 +16,7 @@ def getSequence(tabla):
 
 sqlCursor = getDB().cursor()
 sqlCursor.execute("CREATE TABLE if not exists config_sonidos(id integer primary key autoincrement, identificador varchar(200), rutaFichero varchar(2000))")
-sqlCursor.execute("CREATE TABLE if not exists configuracion(id integer primary key autoincrement, salida_audio varchar(60))")
+sqlCursor.execute("CREATE TABLE if not exists configuracion(id integer primary key autoincrement, salida_audio varchar(60), microfono_default varchar(60))")
 db = getDB()
 cursor = db.cursor()
 try:

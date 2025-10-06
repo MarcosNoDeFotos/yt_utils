@@ -115,3 +115,99 @@
         </div>
     </div>
 </div>
+
+<div id="modalConfiguracionMicroDefecto" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Configuración</h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="microDefecto">Micrófono por defecto</label>
+                    <select class="form-control" id="microDefecto" onchange="guardarMicrofonoPorDefecto(this)">
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="modalEstablecerColorRGB" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Establecer color</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-2">
+                        <div class="form-group">
+                            <label for="rgb_color">Color</label>
+                            <input type="color" class="form-control" id="rgb_color" >
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    Predefinidos
+                </div>
+                <div class="row">
+                    <div class="form-group col-2">
+                        <div class="color-pred" style="background-color: rgb(255, 0, 0);" onclick="setColorConPredefinido(this)"></div>
+                    </div>
+                
+                    <div class="form-group col-2">
+                        <div class="color-pred" style="background-color: rgb(0, 255, 0);" onclick="setColorConPredefinido(this)"></div>
+                    </div>
+                
+                    <div class="form-group col-2">
+                        <div class="color-pred" style="background-color: rgb(0, 0, 255);" onclick="setColorConPredefinido(this)"></div>
+                    </div>
+                
+                    <div class="form-group col-2">
+                        <div class="color-pred" style="background-color: rgb(206, 22, 181);" onclick="setColorConPredefinido(this)"></div>
+                    </div>
+                </div>
+                <div class="row justify-content-end mr-4">
+                    <a href="#" class="btn btn-primary" id="rgb_btn_establecerColor" onclick="rgb_establecerColor()">Establecer</a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="modalMensajesDestacados" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Mensajes Destacados</h5>
+            </div>
+            <div class="modal-body">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr>
+                            <th scope="col">Usuario</th>
+                            <th scope="col">Mensaje</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="contenidoMensajesDestacados">
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
