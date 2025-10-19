@@ -4,7 +4,6 @@ from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, ISimpleAudioVolume
 import pythoncom
 import global_vars
-from modelo import configuracion
 
 
 
