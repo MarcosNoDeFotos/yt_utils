@@ -85,7 +85,8 @@ def getMensajesDestacados():
 def repetirMensajeDestacado():
     usuario = request.args.get("usuario")
     mensaje = request.args.get("mensaje")
-    requests.get("http://192.168.1.188:5000/destacarMensaje?user="+usuario+"&mensaje="+mensaje+"&noInsertInDB=false")
+    origen = request.args.get("origen")
+    requests.get("http://192.168.1.188:5000/destacarMensaje?user="+usuario+"&origen="+origen+"&mensaje="+mensaje+"&noInsertInDB=false")
     return ""
 
 @app.route("/eliminarMensajeDestacado")

@@ -96,8 +96,9 @@ function abrirMensajesDestacados() {
                 var tr = document.createElement("tr")
                 tr.innerHTML = '<td>' + mensajeDestacado.usuario + '</td>' +
                     '<td>' + mensajeDestacado.mensaje + '</td>' +
+                    '<td>' + mensajeDestacado.origen + '</td>' +
                     '<td>' +
-                    '    <a href="#" onclick="repetirMensajeDestacado(\''+mensajeDestacado.usuario+'\', \''+mensajeDestacado.mensaje+'\')"><i class="fa fa-play" aria-hidden="true"></i></a>' +
+                    '    <a href="#" onclick="repetirMensajeDestacado(\''+mensajeDestacado.usuario+'\', \''+mensajeDestacado.mensaje+'\', \''+mensajeDestacado.origen+'\')"><i class="fa fa-play" aria-hidden="true"></i></a>' +
                     '</td>' +
                     '<td>' +
                     '    <a href="#" onclick="eliminarMensajeDestacado('+mensajeDestacado.id+')"><i class="fa fa-trash" style="color:red;" aria-hidden="true"></i></a>' +
@@ -109,10 +110,10 @@ function abrirMensajesDestacados() {
     });
 }
 
-function repetirMensajeDestacado(usuario, mensaje) {
+function repetirMensajeDestacado(usuario, mensaje, origen) {
     $.ajax({
         type: "GET",
-        url: "/repetirMensajeDestacado?usuario="+usuario+"&mensaje="+mensaje,
+        url: "/repetirMensajeDestacado?usuario="+usuario+"&origen="+origen+"&mensaje="+mensaje,
         success: function (response) {}
     });
 }
