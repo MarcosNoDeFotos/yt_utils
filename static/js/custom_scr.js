@@ -275,11 +275,12 @@ function nuevoConfSonido() {
 function rgb_establecerAnimacion(animacion) {
 
     var formData = new FormData()
+    formData.append("color", hexToRgb(document.querySelector("#rgb_color").value))
     formData.append("animacion", animacion)
 
     $.ajax({
         type: "POST",
-        url: "/rgb_establecerAnimacion",
+        url: "/rgb_establecerColor",
         data: formData,
         crossDomain: 'true',
         contentType: false,
@@ -296,6 +297,22 @@ function rgb_establecerColor() {
     $.ajax({
         type: "POST",
         url: "/rgb_establecerColor",
+        data: formData,
+        crossDomain: 'true',
+        contentType: false,
+        processData: false,
+        success: function (response) {
+        }
+    });
+}
+function rgb_establecerBrillo() {
+
+    var formData = new FormData()
+    formData.append("brillo", document.querySelector("#rgb_brillo").value)
+
+    $.ajax({
+        type: "POST",
+        url: "/rgb_establecerBrillo",
         data: formData,
         crossDomain: 'true',
         contentType: false,

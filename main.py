@@ -128,16 +128,28 @@ def eliminarConfiguracionSonido():
 
 # RGB
 
-@app.route("/rgb_establecerAnimacion", methods= ["POST"])
-def rgb_establecerAnimacion():
-    animacion = request.form.get("animacion")
-    ino.escribirMensaje("setAnimacion|"+animacion)
-    return ""
+# @app.route("/rgb_establecerAnimacion", methods= ["POST"])
+# def rgb_establecerAnimacion():
+#     animacion = request.form.get("animacion")
+#     ino.escribirMensaje("setAnimacion|"+animacion)
+#     return ""
 
 @app.route("/rgb_establecerColor", methods= ["POST"])
 def rgb_establecerColor():
     color = request.form.get("color")
-    ino.escribirMensaje("setRGB|"+color)
+    animacion = request.form.get("animacion")
+    if not animacion:
+        animacion = "loop"
+    if animacion != "multicolor":
+        ino.escribirMensaje("set_color_global|"+color+"|animacion="+animacion)
+    else:
+        ino.escribirMensaje("set_animacion|"+animacion)
+    return ""
+
+@app.route("/rgb_establecerBrillo", methods= ["POST"])
+def rgb_establecerBrillo():
+    brillo = request.form.get("brillo").replace(",", ".")
+    ino.escribirMensaje("set_brillo|"+brillo)
     return ""
 
 
