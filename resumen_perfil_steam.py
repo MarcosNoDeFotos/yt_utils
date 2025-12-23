@@ -3,8 +3,7 @@ import time
 import re
 import requests
 from lxml import html
-from lxml.html import HtmlElement
-
+import json
 nombre_juego = "rust"
 id_juego = "252490"
 
@@ -53,21 +52,7 @@ def buscarPerfilSteam(id:str):
         if not horas:
             horas = buscarHorasEnResenia(id)
             
-            
-    if horas:
-        print("Horas "  + horas)
-    if game_ban:
-        print(game_ban+" game ban")
-    if vac_ban:
-        print(vac_ban+ " VAC ban")
-    if ban_dias:
-        print(f"Baneo hace {ban_dias} días")
     
-            
-    if not perfil_configurado:
-        print("Perfil no configurado")
-    if perfil_privado:
-        print("Perfil privado")
     
     
     #Insignia juegos adquiridos
@@ -77,8 +62,10 @@ def buscarPerfilSteam(id:str):
         if elem_insignia[0].__contains__("game owned"):
             insignia_data = elem_insignia[0].split("<br>")[1].strip()
             juegos_adquiridos_por_insignia = insignia_data.split()[0]
-    if juegos_adquiridos_por_insignia:
-        print("Juegos adquiridos encontrados por insignia: "+juegos_adquiridos_por_insignia)
+            
+    perfil = Perfil(id, horas, perfil_privado, perfil_configurado, game_ban, vac_ban, ban_dias, juegos_adquiridos_por_insignia)
+    print(json.dumps(perfil.__dict__, indent=4))
+
 def buscarHorasEnResenia(id:str, url_args=None):
     hours = None
     main_url = f"https://steamcommunity.com/profiles/{id}/recommended"
@@ -101,6 +88,17 @@ def buscarHorasEnResenia(id:str, url_args=None):
 
 
 
+class Perfil:
+    def __init__(self, id, horas, perfil_privado, perfil_configurado, game_ban, vac_ban, ban_dias, juegos_adquiridos_por_insignia):
+        self.id = id
+        self.horas = horas
+        self.perfil_privado = perfil_privado
+        self.perfil_configurado = perfil_configurado
+        self.game_ban = game_ban
+        self.vac_ban = vac_ban
+        self.ban_dias = ban_dias
+        self.juegos_adquiridos_por_insignia = juegos_adquiridos_por_insignia
+    
 
 
 
@@ -115,8 +113,6 @@ while True:
             buscarPerfilSteam(actual)
         ultimo = actual
     time.sleep(2)
-
-
 
 
 
