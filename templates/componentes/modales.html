@@ -239,3 +239,70 @@
         </div>
     </div>
 </div>
+
+
+
+<div id="modalInfoPerfilSteam" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Información del perfil</h5>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex align-items-center mb-3">
+                    <img id="perfil_foto" src="" alt="Foto de perfil" class="rounded-circle mr-3" style="width:64px;height:64px;display:none;">
+                    <div>
+                        <strong id="perfil_nombre"></strong> <span id="visibilidad_perfil"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="perfil_id">ID <a href="" id="url_steam" target="_blank">Steam <i style="font-size: 16px;" class="fa">&#xf08e;</i></a> <a href="" id="url_steamid_uk" target="_blank">SteamID.uk <i style="font-size: 16px;" class="fa">&#xf08e;</i></a></label>
+                    <input type="text" class="form-control" id="perfil_id" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="perfil_horas">Horas</label>
+                    <input type="text" class="form-control" id="perfil_horas" disabled>
+                </div>
+                
+                <div class="form-group">
+                    <label for="perfil_configurado">
+                        Perfil configurado
+                        <span id="perfil_configurado_icon" class="ml-2"></span>
+                    </label>
+                    <input type="text" class="form-control" id="perfil_configurado" disabled style="display:none;">
+                </div>
+                <div class="form-group" id="steam_game_ban">
+                    <label for="perfil_game_ban">
+                        Game ban
+                        <span id="perfil_game_ban_icon" class="ml-2"></span>
+                    </label>
+                    <input type="text" class="form-control" id="perfil_game_ban" disabled style="display:none;">
+                </div>
+                <div class="form-group" id="steam_vac_ban">
+                    <label for="perfil_vac_ban">
+                        VAC ban
+                        <span id="perfil_vac_ban_icon" class="ml-2"></span>
+                    </label>
+                    <input type="text" class="form-control" id="perfil_vac_ban" disabled style="display:none;">
+                </div>
+                <div class="form-group" id="steam_ban_dias">
+                    <label for="perfil_ban_dias">Días desde el último baneo</label>
+                    <input type="text" class="form-control" id="perfil_ban_dias" disabled>
+                </div>
+                <div class="form-group" id="steam_juegos_insignia">
+                    <label for="perfil_juegos_insignia">Juegos adquiridos por insignia</label>
+                    <input type="text" class="form-control" id="perfil_juegos_insignia" disabled>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-check mr-3">
+                    <input class="form-check-input" type="checkbox" id="chkCerrarAutoPerfilSteam" checked>
+                    <label class="form-check-label" for="chkCerrarAutoPerfilSteam">
+                        Cerrar automáticamente (10s)
+                    </label>
+                </div>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

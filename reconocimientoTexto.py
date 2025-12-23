@@ -30,7 +30,8 @@ def traducirImagenPortaPapeles(idiomaOrigen, idiomaDestino):
         for linea in readed:
             texto += linea[1]+" "
         result = traducirTexto(texto, idiomaDestino)
-    except:
+    except Exception as e:
+        print(e)
         result = "No se ha podido obtener el texto de la imagen"
         status = 0
 
@@ -47,7 +48,8 @@ def convertirATextoImagenDePortapapeles(idioma):
         for linea in readed:
             texto += linea[1]+" "
         result = texto
-    except:
+    except Exception as e:
+        print(e)
         result = "No se ha podido obtener el texto de la imagen"
         status = 0
 

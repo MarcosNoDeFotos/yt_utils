@@ -1,0 +1,231 @@
+:root {
+  --resizer-width: 8px;
+  --min-col-width: 10%;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: #121212;
+  color: #eaeaea;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.columns {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.column {
+  position: relative;
+  height: 100%;
+  flex-grow: 0;
+  flex-shrink: 0;
+  border-right: 1px solid #2a2a2a;
+  background: #1a1a1a;
+}
+
+.column:last-child {
+  border-right: none;
+}
+
+.column-content {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-area {
+  padding: 12px;
+  gap: 8px;
+  display: flex;
+  flex-direction: column;
+  background: #222;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.input-area input[type="text"] {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #3a3a3a;
+  background: #161616;
+  color: #eaeaea;
+}
+
+.input-area button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background: #2d6cdf;
+  color: white;
+  cursor: pointer;
+}
+
+.input-area button:hover {
+  background: #255ac0;
+}
+
+.chat-frame {
+  flex: 1;
+  width: 100%;
+  border: none;
+  display: none; /* hidden until a URL is set */
+  background: #000;
+}
+
+.column.has-url .chat-frame {
+  display: block;
+}
+
+.column.has-url .input-area {
+  display: none;
+}
+
+.gear-container {
+  position: absolute;
+  right: calc(var(--resizer-width) + 8px);
+  bottom: 8px;
+  /* oculto por defecto, se muestra al hacer hover en la columna */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.column:hover .gear-container {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.gear-btn {
+  border: none;
+  background: #333;
+  color: #eaeaea;
+  border-radius: 20px;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+}
+
+.gear-btn:hover { background: #444; }
+
+.menu {
+  position: absolute;
+  right: 0;
+  bottom: 44px;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  padding: 6px;
+  min-width: 180px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+}
+
+.menu.hidden { display: none; }
+
+.menu button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border: none;
+  background: transparent;
+  color: #eaeaea;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.menu button:hover {
+  background: #3a3a3a;
+}
+
+.resizer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--resizer-width);
+  height: 100%;
+  cursor: col-resize;
+  background: transparent;
+}
+
+.column:last-child .resizer {
+  display: none;
+}
+
+.floating-btn {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  width: 44px;
+  height: 44px;
+  border-radius: 32px;
+  border: none;
+  background: #2d6cdf;
+  color: white;
+  font-size: 24px;
+  line-height: 24px;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+  z-index: 10;
+}
+
+.floating-btn:hover { background: #255ac0; }
+
+.dragging {
+  cursor: col-resize;
+  user-select: none;
+}
+
+/* Aviso de entorno (HTTP no seguro para Twitch) */
+.env-warning {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  right: 68px; /* deja espacio al botón flotante */
+  background: #3a2a00;
+  border: 1px solid #6b4f00;
+  color: #ffda8a;
+  padding: 10px 12px;
+  border-radius: 8px;
+  z-index: 11;
+  font-size: 13px;
+  line-height: 1.3;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+}
+
+.env-warning .close {
+  float: right;
+  background: transparent;
+  border: none;
+  color: #ffda8a;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0 4px;
+}
+
+.env-warning .close:hover {
+  color: #fff1c2;
+}
+
+/* Menú global de configuración (botón flotante) */
+.global-menu {
+  position: fixed;
+  top: 60px;
+  right: 12px;
+  bottom: auto;
+}
+
+nav{
+  display: none!important;
+}

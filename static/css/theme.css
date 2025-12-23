@@ -63,6 +63,10 @@ body {
   border-color: #007bff;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
+.form-control:disabled{
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
 
 .form-control::placeholder {
   color: var(--text-color);

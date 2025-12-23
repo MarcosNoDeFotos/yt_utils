@@ -3,3 +3,5 @@ audio_out/
 audio_output/
 bin/*
 __pycache__/
+*.pem
+*.conf

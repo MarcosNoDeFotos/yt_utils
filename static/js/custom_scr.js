@@ -1,10 +1,50 @@
-
 var completadoIcon = '<i class="fa fa-check tick" aria-hidden="true"></i>'
 var cargandoIcon = '<i class="fa fa-spinner" aria-hidden="true"></i>'
 
+// Estado para el perfil de Steam
+var ultimoPerfilSteamId = null
+var autoClosePerfilSteamTimeout = null
+var AUTO_CLOSE_PERFIL_STEAM_KEY = "chkCerrarAutoPerfilSteam"
 
 $("#pegarCapturaYTraducir").on("click", pegarCapturaYTraducir)
 $("#pegarCapturaYReconocerTexto").on("click", pegarCapturaYReconocerTexto)
+
+// Restaurar estado del checkbox desde localStorage
+;(function inicializarChkCerrarAutoPerfilSteam() {
+    var stored = null
+    try {
+        stored = localStorage.getItem(AUTO_CLOSE_PERFIL_STEAM_KEY)
+    } catch (e) {}
+    if (stored !== null) {
+        $("#chkCerrarAutoPerfilSteam").prop("checked", stored === "true")
+    }
+})()
+
+// Guardar cambios del checkbox en localStorage
+$("#chkCerrarAutoPerfilSteam").on("change", function () {
+    try {
+        localStorage.setItem(AUTO_CLOSE_PERFIL_STEAM_KEY, $(this).is(":checked").toString())
+    } catch (e) {}
+})
+
+// Botón flotante: forzar mostrar siempre el modal con los datos actuales
+$("#btnPerfilSteamFlotante").on("click", function () {
+    solicitarDatosPerfilSteam(true)
+})
+
+// Limpiar timeout al cerrar el modal manualmente
+$('#modalInfoPerfilSteam').on('hide.bs.modal', function () {
+    if (autoClosePerfilSteamTimeout) {
+        clearTimeout(autoClosePerfilSteamTimeout)
+        autoClosePerfilSteamTimeout = null
+    }
+})
+
+// Polling cada 3s: mostrar modal solo si cambia el id
+setInterval(function () {
+    solicitarDatosPerfilSteam(false)
+}, 3000)
+
 function pegarCapturaYTraducir() {
     $("#resultadoTraducción").val("Traduciendo...");
     var idiomaOrigen = $("#idiomaOrigen").val();
@@ -266,9 +306,124 @@ function nuevoConfSonido() {
 
 }
 
+// ----- Perfil Steam -----
 
+function solicitarDatosPerfilSteam(forzarMostrar) {
+    $.ajax({
+        type: "GET",
+        url: "/getDatosPerfilSteam",
+        success: function (response) {
+            try {
+                var datos = typeof response === "string" ? JSON.parse(response) : response
+            } catch (e) {
+                return
+            }
+            if (!datos || typeof datos.id === "undefined") {
+                return
+            }
 
+            if (forzarMostrar || datos.id !== ultimoPerfilSteamId) {
+                ultimoPerfilSteamId = datos.id
+                actualizarModalPerfilSteam(datos)
+                mostrarModalPerfilSteam()
+            }
+        }
+    })
+}
 
+function actualizarModalPerfilSteam(datos) {
+    if ($("#modalInfoPerfilSteam").length === 0) {
+        return
+    }
+    if (datos.id) {
+        $("#url_steam").attr("href", "https://steamcommunity.com/profiles/" + datos.id)
+        $("#url_steamid_uk").attr("href", "https://steamid.uk/profile/" + datos.id)
+    }
+
+    // Nombre y foto de perfil
+    $("#perfil_nombre").text(datos.nombre != null ? datos.nombre : "")
+    if (datos.foto_perfil) {
+        $("#perfil_foto").attr("src", datos.foto_perfil).show()
+    } else {
+        $("#perfil_foto").attr("src", "").hide()
+    }
+
+    $("#perfil_id").val(datos.id != null ? datos.id : "")
+    $("#perfil_horas").val(datos.horas != null ? datos.horas : "")
+
+    // Perfil privado: true => tick verde, false => cruz roja
+    var esPerfilPrivado = (datos.perfil_privado === true || datos.perfil_privado === "true" || datos.perfil_privado === 1 || datos.perfil_privado === "1")
+    // $("#perfil_privado").val(datos.perfil_privado != null ? datos.perfil_privado : "")
+    // $("#perfil_privado_icon").html(
+    //     esPerfilPrivado
+    //         ? '<i class="fa fa-check" style="color:green;" aria-hidden="true"></i>'
+    //         : '<i class="fa fa-times" style="color:red;" aria-hidden="true"></i>'
+    // )
+    $("#visibilidad_perfil").html(
+        esPerfilPrivado
+            ? '<span class="badge badge-secondary ml-2">Privado</span>'
+            : '<span class="badge badge-success ml-2">Público</span>'
+    )
+    // Perfil configurado: true => tick verde, false => cruz roja
+    var esPerfilConfigurado = (datos.perfil_configurado === true || datos.perfil_configurado === "true" || datos.perfil_configurado === 1 || datos.perfil_configurado === "1")
+    $("#perfil_configurado").val(datos.perfil_configurado != null ? datos.perfil_configurado : "")
+    $("#perfil_configurado_icon").html(
+        esPerfilConfigurado
+            ? '<i class="fa fa-check" style="color:green;" aria-hidden="true"></i>'
+            : '<i class="fa fa-times" style="color:red;" aria-hidden="true"></i>'
+    )
+
+    // Game ban: true => cruz roja, vacío/false => tick verde
+    var tieneGameBan = (datos.game_ban === true || datos.game_ban === "true" || datos.game_ban === 1 || datos.game_ban === "1")
+    $("#perfil_game_ban").val(datos.game_ban != null ? datos.game_ban : "")
+    $("#perfil_game_ban_icon").html(
+        tieneGameBan
+            ? '<i class="fa fa-times" style="color:red;" aria-hidden="true"></i>'
+            : '<i class="fa fa-check" style="color:green;" aria-hidden="true"></i>'
+    )
+
+    // VAC ban: true => cruz roja, vacío/false => tick verde
+    var tieneVacBan = (datos.vac_ban === true || datos.vac_ban === "true" || datos.vac_ban === 1 || datos.vac_ban === "1")
+    $("#perfil_vac_ban").val(datos.vac_ban != null ? datos.vac_ban : "")
+    $("#perfil_vac_ban_icon").html(
+        tieneVacBan
+            ? '<i class="fa fa-times" style="color:red;" aria-hidden="true"></i>'
+            : '<i class="fa fa-check" style="color:green;" aria-hidden="true"></i>'
+    )
+
+    // datos.game_ban == null ? $("#steam_game_ban").hide() : $("#steam_game_ban").show()
+    $("#perfil_game_ban").val(datos.game_ban != null ? datos.game_ban : "")
+    // datos.vac_ban == null ? $("#steam_vac_ban").hide() : $("#steam_vac_ban").show()
+    $("#perfil_vac_ban").val(datos.vac_ban != null ? datos.vac_ban : "")
+    datos.ban_dias == null ? $("#steam_ban_dias").hide() : $("#steam_ban_dias").show()
+    $("#perfil_ban_dias").val(datos.ban_dias != null ? datos.ban_dias : "")
+    datos.juegos_adquiridos_por_insignia == null ? $("#steam_juegos_insignia").hide() : $("#steam_juegos_insignia").show()
+    $("#perfil_juegos_insignia").val(
+        datos.juegos_adquiridos_por_insignia != null ? datos.juegos_adquiridos_por_insignia : ""
+    )
+}
+
+function mostrarModalPerfilSteam() {
+    if ($("#modalInfoPerfilSteam").length === 0) {
+        return
+    }
+
+    $("#modalInfoPerfilSteam").modal("show")
+
+    if (autoClosePerfilSteamTimeout) {
+        clearTimeout(autoClosePerfilSteamTimeout)
+        autoClosePerfilSteamTimeout = null
+    }
+
+    var autoCerrar = $("#chkCerrarAutoPerfilSteam").is(":checked")
+    if (autoCerrar) {
+        autoClosePerfilSteamTimeout = setTimeout(function () {
+            if ($("#chkCerrarAutoPerfilSteam").is(":checked")) {
+                $("#modalInfoPerfilSteam").modal("hide")
+            }
+        }, 10000)
+    }
+}
 
 // RGB
 

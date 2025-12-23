@@ -13,3 +13,6 @@ matplotlib
 pyaudio
 deep_translator
 keyboard
+pyperclip
+lxml
+requests

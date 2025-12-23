@@ -1,3 +1,4 @@
+import threading
 from flask import Flask, request, render_template
 import global_vars
 import json
@@ -13,6 +14,9 @@ import pythoncom
 from pycaw.pycaw import AudioUtilities
 import requests
 import warnings
+import resumen_perfil_steam
+
+
 warnings.filterwarnings("ignore", category=UserWarning)
 
 app = Flask("app")
@@ -20,34 +24,35 @@ app = Flask("app")
 
 @app.route("/")
 def index():
-
-    return render_template("index.html", modales = leerModales())
+    return render_template("index.html", modales = leerComponente("modales"), menu = leerComponente("menu"))
 
 @app.route("/sonido")
 def sonido():
-
-    return render_template("sonido.html", modales = leerModales())
+    return render_template("sonido.html", modales = leerComponente("modales"), menu = leerComponente("menu"))
 
 
 @app.route("/juego")
 def juego():
-
-    return render_template("juego.html", modales = leerModales())
+    return render_template("juego.html", modales = leerComponente("modales"), menu = leerComponente("menu"))
 
 
 @app.route("/video")
 def video():
-
-    return render_template("video.html", modales = leerModales())
+    return render_template("video.html", modales = leerComponente("modales"), menu = leerComponente("menu"))
 
 
 @app.route("/rgb")
 def rgb():
-    return render_template("rgb.html", modales = leerModales(), conectado = ino.conectado)
+    return render_template("rgb.html", modales = leerComponente("modales"), menu = leerComponente("menu"), conectado = ino.conectado)
 
 @app.route("/botones")
 def botones():
-    return render_template("botones.html", modales = leerModales())
+    return render_template("botones.html", modales = leerComponente("modales"), menu = leerComponente("menu"))
+
+
+@app.route("/multichat")
+def multichat():
+    return render_template("multichat.html", modales = leerComponente("modales"), menu = leerComponente("menu"))
 
 
 
@@ -55,6 +60,13 @@ def botones():
 
 
 
+
+@app.route("/getDatosPerfilSteam")
+def getDatosPerfilSteam():
+    if resumen_perfil_steam.ultimo_perfil:
+        return json.dumps(resumen_perfil_steam.ultimo_perfil.__dict__)
+    else:
+        return "{}"
 
 @app.route("/pegarCapturaYTraducir")
 def pegarCapturaYTraducir():
@@ -242,12 +254,14 @@ def mutearDesmutearMicro():
 
 
 
-def leerModales():
-    modales = ""
-    with open(global_vars.currentPath+"templates/modales.html", encoding="utf-8") as file:
-        modales = file.read()
+def leerComponente(componente):
+    componenteElement = ""
+    with open(global_vars.currentPath+f"templates/componentes/{componente}.html", encoding="utf-8") as file:
+        componenteElement = file.read()
         file.close()
-    return modales
+    return componenteElement
+
+
 
 
 def setMicrofonoPorDefecto(microfono):
@@ -262,8 +276,10 @@ def setMicrofonoPorDefecto(microfono):
 
 if __name__ == '__main__':
 
-    
+    processing_thread = threading.Thread(target=resumen_perfil_steam.start_listener)
+    processing_thread.daemon = True
+    processing_thread.start()   
     microfono = configuracion.getConfiguracion().microfono_default
     setMicrofonoPorDefecto(microfono)
     
-    app.run(debug=False, host="192.168.1.189")
+    app.run(debug=True, host="192.168.1.189", port=443, use_reloader=False, ssl_context=("cert.pem", "key.pem"))
